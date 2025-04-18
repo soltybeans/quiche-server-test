@@ -22,14 +22,14 @@ fn main() {
     let mut conn = connection.unwrap();
 
     loop {
-        let (bytes_for_output_buffer, send_info): (usize, SendInfo) = match conn.send(packet) {
+        let (_bytes_for_output_buffer, _send_info): (usize, SendInfo) = match conn.send(packet) {
             Ok(v) => {
                 println!("bytes for output: {}", v.0);
                 dbg!("send info: {}", v.1);
                 v
             },
             Err(quiche::Error::Done) => {
-                println!("Job's done!");
+                println!("Done writing!");
                 break;
             }
             Err(_e) => {
@@ -37,10 +37,8 @@ fn main() {
                 break;
             }
         };
+        socket.send_to(packet, SERVER);
         // Use UDP socket to send out data
         // TODO
-
-
-
     }
 }
